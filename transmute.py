@@ -1,3 +1,4 @@
+#from __future__ import division
 import sqlite3
 
 # db structure:
@@ -14,15 +15,22 @@ class Database(object):
             self.cursor.execute("SELECT * FROM Drugs")
             self.contents = self.cursor.fetchall()
 
-    def send_contents(self):
-        return self.contents
+    def get_drug(self, query):
+        for drug in self.contents:
+            if query in drug:
+                return drug
 
 data = Database("drugs.sqlite")
-drugs = data.send_contents()
 
-for drug in drugs:
-    print drug["Name"]
-    print drug["Trade"]
-    print drug["Class"]
-    print drug["CF"]
-    print drug["Typical"]
+convert_from = raw_input("Convert from: ")
+dosage = raw_input("Dosage in mg: ")
+convert_to = raw_input("Convert to: ")
+
+db_from = data.get_drug(convert_from)
+db_to = data.get_drug(convert_to)
+
+multiplier = float(db_from["CF"])/float(db_to["CF"])
+
+result = float(dosage) * multiplier
+
+print "Equivalent dose: ~"+str(result)+"mg"
