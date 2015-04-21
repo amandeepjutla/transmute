@@ -1,4 +1,5 @@
-#from __future__ import division
+#Transmute
+
 import sqlite3
 
 # db structure:
@@ -20,14 +21,14 @@ class Database(object):
             if query in drug:
                 return drug
 
-data = Database("drugs.sqlite")
+antipsychotics = Database("antipsychotics.sqlite")
 
 convert_from = raw_input("Convert from: ")
 dosage = raw_input("Dosage in mg: ")
 convert_to = raw_input("Convert to: ")
 
-db_from = data.get_drug(convert_from)
-db_to = data.get_drug(convert_to)
+db_from = antipsychotics.get_drug(convert_from)
+db_to = antipsychotics.get_drug(convert_to)
 
 multiplier = float(db_from["CF"])/float(db_to["CF"])
 
