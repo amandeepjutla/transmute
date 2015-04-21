@@ -1,7 +1,7 @@
 import sqlite3
 import sys
 
-connection = sqlite3.connect("drugs.sqlite")
+connection = sqlite3.connect("antipsychotics.sqlite")
 
 q = """
         INSERT INTO Drugs(Name, Trade, Class, CF, Typical)
