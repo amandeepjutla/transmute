@@ -21,14 +21,14 @@ class Database(object):
             if query in drug:
                 return drug
 
-antipsychotics = Database("antipsychotics.sqlite")
+drugs = Database("drugs.sqlite")
 
 convert_from = raw_input("Convert from: ")
 dosage = raw_input("Dosage in mg: ")
 convert_to = raw_input("Convert to: ")
 
-db_from = antipsychotics.get_drug(convert_from)
-db_to = antipsychotics.get_drug(convert_to)
+db_from = drugs.get_drug(convert_from)
+db_to = drugs.get_drug(convert_to)
 
 multiplier = float(db_from["CF"])/float(db_to["CF"])
 
