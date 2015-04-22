@@ -13,7 +13,7 @@ class Database(object):
         with self.connection:
             self.connection.row_factory = sqlite3.Row
             self.cursor = self.connection.cursor()
-            self.cursor.execute("SELECT * FROM Drugs")
+            self.cursor.execute("SELECT * FROM Antipsychotics")
             self.contents = self.cursor.fetchall()
 
     def get_drug(self, query):
