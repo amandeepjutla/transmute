@@ -16,6 +16,9 @@ class Database(object):
             self.cursor.execute("SELECT * FROM %s" % table)
             self.contents = self.cursor.fetchall()
 
+            self.cursor.execute("SELECT Name FROM ANTIPSYCHOTICS")
+            self.drugs = self.cursor.fetchall()
+
     def get_drug(self, query):
         for drug in self.contents:
             if query in drug:
