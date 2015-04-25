@@ -45,9 +45,6 @@ class Example(Frame):
         self.style = Style()
         self.style.theme_use("default")
 
-        items = ["things", "stuff", "Etc"]
-        items2 = ["ok", "whatevs", "sure"]
-
         box1 = Listbox(self)
         box2 = Listbox(self)
 
