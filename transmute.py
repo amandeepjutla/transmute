@@ -24,7 +24,7 @@ class Database(object):
 antipsychotics = Database("drugs.sqlite", "ANTIPSYCHOTICS")
 benzodiazepines = Database("drugs.sqlite", "BENZODIAZEPINES")
 
-mode = raw_input("Mode? ")
+mode = raw_input("Mode? 1 - Antipsychotics, 2 - Benzodiazepines: ")
 convert_from = raw_input("Convert from: ")
 dosage = raw_input("Dosage in mg: ")
 convert_to = raw_input("Convert to: ")
@@ -32,13 +32,12 @@ convert_to = raw_input("Convert to: ")
 if mode =="1":
     db_from = antipsychotics.get_drug(convert_from)
     db_to = antipsychotics.get_drug(convert_to)
-    multiplier = float(db_from["CF"])/float(db_to["CF"])
-    result = float(dosage) * multiplier
-
+    
 else:
     db_from = benzodiazepines.get_drug(convert_from)
     db_to = benzodiazepines.get_drug(convert_to)
-    multiplier = float(db_from["CF"])*float(db_to["CF"])
-    result = float(dosage) * multiplier    
+
+multiplier = float(db_from["CF"])/float(db_to["CF"])
+result = float(dosage) * multiplier
 
 print "Equivalent dose: ~"+str(result)+"mg"
