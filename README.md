@@ -1,4 +1,4 @@
 ### Transmute
 
 #### About
-`transmute` is a convenient tool to convert between roughly equivalent doses of psychiatric drugs within a given class. Currently it has a placeholder interface and sometimes gives amazingly wrong answers.
+`transmute` is a convenient tool to convert between roughly equivalent doses of psychiatric drugs within a given class. Currently it has a placeholder interface.
