@@ -7,13 +7,13 @@ import sqlite3
 # Name, Trade, Class, CF, Typical
 
 class Database(object):
-    def __init__(self, filename):
+    def __init__(self, filename, table):
         self.connection = sqlite3.connect(filename)
 
         with self.connection:
             self.connection.row_factory = sqlite3.Row
             self.cursor = self.connection.cursor()
-            self.cursor.execute("SELECT * FROM Antipsychotics")
+            self.cursor.execute("SELECT * FROM %s" % table)
             self.contents = self.cursor.fetchall()
 
     def get_drug(self, query):
@@ -21,17 +21,24 @@ class Database(object):
             if query in drug:
                 return drug
 
-drugs = Database("drugs.sqlite")
+antipsychotics = Database("drugs.sqlite", "ANTIPSYCHOTICS")
+benzodiazepines = Database("drugs.sqlite", "BENZODIAZEPINES")
 
+mode = raw_input("Mode? ")
 convert_from = raw_input("Convert from: ")
 dosage = raw_input("Dosage in mg: ")
 convert_to = raw_input("Convert to: ")
 
-db_from = drugs.get_drug(convert_from)
-db_to = drugs.get_drug(convert_to)
+if mode =="1":
+    db_from = antipsychotics.get_drug(convert_from)
+    db_to = antipsychotics.get_drug(convert_to)
+    multiplier = float(db_from["CF"])/float(db_to["CF"])
+    result = float(dosage) * multiplier
 
-multiplier = float(db_from["CF"])/float(db_to["CF"])
-
-result = float(dosage) * multiplier
+else:
+    db_from = benzodiazepines.get_drug(convert_from)
+    db_to = benzodiazepines.get_drug(convert_to)
+    multiplier = float(db_from["CF"])*float(db_to["CF"])
+    result = float(dosage) * multiplier    
 
 print "Equivalent dose: ~"+str(result)+"mg"
