@@ -86,7 +86,7 @@ class TransmuteBenzodiazepines(ttk.Frame):
 
     def draw_from_field(self, drug_type):
         self.convert_from = tkinter.StringVar()
-        self.convert_from.set("mg of one "+drug_type+" roughly equates to:")
+        self.convert_from.set("mg of one "+drug_type+" roughly equals:")
         self.label_from = ttk.Label(self, anchor=tkinter.W, textvariable=self.convert_from, width=35)
         self.label_from.pack(side=tkinter.TOP, anchor=tkinter.W, padx=5, pady=3)
 
@@ -120,7 +120,7 @@ class TransmuteBenzodiazepines(ttk.Frame):
         idx = sender.curselection()
         global from_drug 
         from_drug = sender.get(idx)
-        self.convert_from.set("mg of "+from_drug+" roughly equates to:")
+        self.convert_from.set("mg of "+from_drug+" roughly equals:")
 
     def clicked_to(self, val):
         sender = val.widget
