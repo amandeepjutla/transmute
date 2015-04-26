@@ -1,7 +1,8 @@
+#transmute: antipsychotic tool
+
 from tkinter import Tk, RIGHT, LEFT, TOP, BOTTOM, BOTH, FLAT, RAISED, SUNKEN, RIDGE, END, SW, W, Listbox, StringVar, Toplevel
 from tkinter import ttk
 
-#ttk import Frame, Button, Style, Label
 import sqlite3
 
 class Database(object):
@@ -37,13 +38,13 @@ class Database(object):
             drug_list.append(drug)
         return drug_list
 
-class Example(ttk.Frame):
+class TransmuteAntipsychotics(ttk.Frame):
     def __init__(self, parent):
         ttk.Frame.__init__(self, parent)
         self.parent = parent
         self.initUI()
     def initUI(self):
-        self.parent.title("Transmute")
+        self.parent.title("Transmute: Antipsychotics")
         self.style = ttk.Style()
         self.style.theme_use("default")
 
@@ -61,7 +62,7 @@ class Example(ttk.Frame):
                 l.append(row[col]) 
             d[i] = l
 
-        for drug in d.values():
+        for drug in sorted(d.values()):
             drug_string = str(drug)
             drug_string = drug_string.replace("'","").replace("[","").replace("]","")
 
@@ -116,10 +117,12 @@ class Example(ttk.Frame):
         db_to = self.antipsychotics.get_drug(to_drug)
         dose = self.dose_entry.get()
 
-        multiplier = float(db_from["CF"])/float(db_to["CF"])
-        result = float(dose) * multiplier
-        self.result_given.set(result)
-
+        try:
+            multiplier = float(db_from["CF"])/float(db_to["CF"])
+            result = float(dose) * multiplier
+            self.result_given.set(result)
+        except:
+            self.result_given.set("Enter a numeric dose above.")
 #        self.give_result(result)
 
     def onSelect1(self, val):
@@ -141,7 +144,7 @@ class Example(ttk.Frame):
 
 def main():
     root = Tk()
-    app = Example(root)
+    app = TransmuteAntipsychotics(root)
     root.mainloop()
 
 main()
