@@ -69,10 +69,10 @@ class TransmuteAntipsychotics(ttk.Frame):
             box1.insert(END, drug_string)
             box2.insert(END, drug_string)
 
-        box1.bind("<<ListboxSelect>>", self.onSelect1)
+        box1.bind("<<ListboxSelect>>", self.on_select_from)
         box1.pack(side=LEFT, padx=5, pady=3)
 
-        box2.bind("<<ListboxSelect>>", self.onSelect2)
+        box2.bind("<<ListboxSelect>>", self.on_select_to)
         box2.pack(side=LEFT)
 
         self.pack(fill=BOTH, expand=1, side=LEFT)
@@ -125,14 +125,14 @@ class TransmuteAntipsychotics(ttk.Frame):
             self.result_given.set("Enter a numeric dose above.")
 #        self.give_result(result)
 
-    def onSelect1(self, val):
+    def on_select_from(self, val):
         sender = val.widget
         idx = sender.curselection()
         global from_drug 
         from_drug = sender.get(idx)
         self.convert_from.set("mg of "+from_drug+" roughly equates to:")
 
-    def onSelect2(self, val):
+    def on_select_to(self, val):
         sender = val.widget
         idx = sender.curselection()
         global to_drug
