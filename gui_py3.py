@@ -14,7 +14,7 @@ class Database(object):
             self.cursor.execute("SELECT * FROM %s" % table)
             self.contents = self.cursor.fetchall()
 
-            self.cursor.execute("SELECT Name FROM ANTIPSYCHOTICS")
+            self.cursor.execute("SELECT Name FROM %s" % table)
             self.drugs = self.cursor.fetchall()
 
     def get_drug(self, query):
@@ -22,38 +22,46 @@ class Database(object):
             if query in drug:
                 return drug
 
-    def dump_drugs(self):
-        drug_list = []
+    def drug_dictionary(self):
+        dump = []
+        dictionary = {}
         for drug in self.drugs:
-            drug_list.append(drug)
-        return drug_list
+            dump.append(drug)
+        for i, row in enumerate(dump):
+            n = []
+            for col in range(0, len(row)):
+                n.append(row[col])
+            dictionary[i] = n
+        return dictionary
 
 class TransmuteAntipsychotics(ttk.Frame):
     def __init__(self, parent):
         ttk.Frame.__init__(self, parent)
         self.parent = parent
-        self.initUI()
+        self.antipsychotics = Database("drugs.sqlite", "ANTIPSYCHOTICS")
+        self.assemble_interface()
 
-    def initUI(self):
+    def assemble_interface(self):
         self.parent.title("Transmute: Antipsychotics")
         self.style = ttk.Style()
         self.style.theme_use("default")
+        self.draw_listboxes(23, self.antipsychotics.drug_dictionary().values())
 
-        from_box = tkinter.Listbox(self, height=23)
-        to_box = tkinter.Listbox(self, height=23)
+        self.pack(fill=tkinter.BOTH, expand=1, side=tkinter.LEFT)
+        self.draw_entry_box()
+        self.draw_from_field("antipsychotic")
+        self.draw_result_label()
+        self.draw_to_field("antipsychotic")
 
-        self.antipsychotics = Database("drugs.sqlite", "ANTIPSYCHOTICS")
-    
-        dumped = self.antipsychotics.dump_drugs()
+        frame = ttk.Frame(self, relief=tkinter.FLAT, borderwidth=1)
+        frame.pack(fill=tkinter.BOTH, expand=1)
+        self.draw_buttons()
 
-        drug_dictionary = {}
-        for i, row in enumerate(dumped):    
-            l = []
-            for col in range(0, len(row)):
-                l.append(row[col]) 
-            drug_dictionary[i] = l
-
-        for drug in sorted(drug_dictionary.values()):
+    def draw_listboxes(self, height, values):
+        from_box = tkinter.Listbox(self, height=height)
+        to_box = tkinter.Listbox(self, height=height)
+  
+        for drug in sorted(values):
             drug_string = str(drug)
             drug_string = drug_string.replace("'","").replace("[","").replace("]","")
 
@@ -66,42 +74,34 @@ class TransmuteAntipsychotics(ttk.Frame):
         to_box.bind("<<ListboxSelect>>", self.clicked_to)
         to_box.pack(side=tkinter.LEFT)
 
-        self.pack(fill=tkinter.BOTH, expand=1, side=tkinter.LEFT)
-
+    def draw_entry_box(self):
         self.dose_entry = ttk.Entry(self, width=35)
         self.dose_entry.pack(side=tkinter.TOP, anchor=tkinter.W, padx=5, pady=3)
 
-        self.convert_from = tkinter.StringVar()
-        self.convert_from.set("mg of one antipsychotic roughly equates to:")
-        self.label_from = ttk.Label(self, anchor=tkinter.W, textvariable=self.convert_from, width=35)
-        self.label_from.pack(side=tkinter.TOP, anchor=tkinter.W, padx=5, pady=3)
-
+    def draw_result_label(self):
         self.result_given = tkinter.StringVar()
         self.result_given.set("?")
         self.result_label = ttk.Label(self, anchor=tkinter.W, textvariable=self.result_given, width=35, relief=tkinter.RAISED, background="white")
         self.result_label.pack(side=tkinter.TOP, anchor=tkinter.W, padx=5, pady=3)
 
+    def draw_from_field(self, drug_type):
+        self.convert_from = tkinter.StringVar()
+        self.convert_from.set("mg of one "+drug_type+" roughly equates to:")
+        self.label_from = ttk.Label(self, anchor=tkinter.W, textvariable=self.convert_from, width=35)
+        self.label_from.pack(side=tkinter.TOP, anchor=tkinter.W, padx=5, pady=3)
+
+    def draw_to_field(self, drug_type):
         self.convert_to = tkinter.StringVar()
-        self.convert_to.set("mg of another antipsychotic.")
+        self.convert_to.set("mg of another "+drug_type+".")
         self.label_to = ttk.Label(self, anchor=tkinter.W, textvariable=self.convert_to)
         self.label_to.pack(side=tkinter.TOP, anchor=tkinter.W, padx=5, pady=3)
 
-        frame = ttk.Frame(self, relief=tkinter.FLAT, borderwidth=1)
-        frame.pack(fill=tkinter.BOTH, expand=1)
-
+    def draw_buttons(self):
         convert_button = ttk.Button(self, text="Convert", command = self.convert)
         convert_button.pack(side=tkinter.LEFT, padx=5, pady=3)
 
         exit_button = ttk.Button(self, text="Exit", command = self.kill)
         exit_button.pack(side=tkinter.LEFT, padx=5, pady=3)
-
-    def give_result(self, result):
-        toplevel = Toplevel()
-        frame = ttk.Frame(self, borderwidth=1)
-        frame.pack()
-
-        label1 = ttk.Label(toplevel, text=result)
-        label1.pack()
 
     def convert(self):
         db_from = self.antipsychotics.get_drug(from_drug)
@@ -132,9 +132,6 @@ class TransmuteAntipsychotics(ttk.Frame):
     def kill(self):
         self.quit()
 
-def main():
-    root = tkinter.Tk()
-    app = TransmuteAntipsychotics(root)
-    root.mainloop()
-
-main()
+root = tkinter.Tk()
+transmute_antipsychotics = TransmuteAntipsychotics(root)
+root.mainloop()
