@@ -60,7 +60,7 @@ class TransmuteBenzodiazepines(ttk.Frame):
     def draw_listboxes(self, height, values):
         from_box = tkinter.Listbox(self, height=height)
         to_box = tkinter.Listbox(self, height=height)
-  
+
         for drug in sorted(values):
             drug_string = str(drug)
             drug_string = drug_string.replace("'","").replace("[","").replace("]","")
@@ -118,7 +118,7 @@ class TransmuteBenzodiazepines(ttk.Frame):
     def clicked_from(self, val):
         sender = val.widget
         idx = sender.curselection()
-        global from_drug 
+        global from_drug
         from_drug = sender.get(idx)
         self.convert_from.set("mg of "+from_drug+" roughly equates to:")
 
